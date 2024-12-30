@@ -57,6 +57,12 @@ Run the following command to generate audio files:
 python generate_audio.py
 ```
 
+## Plan
+
+- Extend support to include `.wav` file generation.
+- Implement image generation to match the sounds.
+- Enhance error handling and logging.
+- Add more customization options for audio and image outputs.
 
    Usage
 The script reads the word/sentence list from the data/words.txt file and generates audio files for each word/sentence in the list. The audio files are saved in the audio directory.  
