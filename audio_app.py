@@ -3,6 +3,7 @@ from gtts import gTTS
 from gtts.tts import gTTSError
 from pydub import AudioSegment
 
+
 # Function to display accent menu and get user input
 def select_accent():
     print("Select an accent:")
@@ -13,6 +14,7 @@ def select_accent():
     choice = input("Enter your choice (1/2/3/4): ").strip()
     return choice
 
+
 # Map user choice to tld values
 accent_map = {
     '1': 'co.uk',
@@ -20,6 +22,7 @@ accent_map = {
     '3': 'co.in',
     '4': 'com'
 }
+
 
 # Function to display menu and get user input
 def display_menu():
@@ -32,6 +35,7 @@ def display_menu():
     choice = input("Enter your choice (1/2/3/4/5): ").strip()
     return choice
 
+
 # Function to clean the sounds directory
 def clean_sounds_directory(directory):
     for filename in os.listdir(directory):
@@ -39,15 +43,24 @@ def clean_sounds_directory(directory):
         if os.path.isfile(file_path):
             os.remove(file_path)
 
+
 # Function to merge all sound files into one
-def merge_sounds(directory, output_file):
+# Define the global pause duration
+PAUSE_DURATION_MS = 1000
+
+
+def merge_sounds(directory, output_file, pause_duration=PAUSE_DURATION_MS):
     combined = AudioSegment.empty()
+    pause = AudioSegment.silent(duration=pause_duration)
+
     for filename in sorted(os.listdir(directory)):
         if filename.endswith('.mp3'):
             sound = AudioSegment.from_mp3(os.path.join(directory, filename))
-            combined += sound
+            combined += sound + pause
+
     combined.export(output_file, format="mp3")
     print(f"Merged file saved as: {output_file}")
+
 
 # Prompt user to enter the directory path
 directory = input("Enter the directory path containing image files: ").strip()
@@ -59,6 +72,7 @@ if not os.path.exists(directory):
 else:
     print(f"Directory exists: {directory}")
 
+
 # Function to display file type menu and get user input
 def select_file_type():
     print("Select the file type to process:")
@@ -67,6 +81,7 @@ def select_file_type():
     print("3. GIF files (.gif)")
     choice = input("Enter your choice (1/2/3): ").strip()
     return choice
+
 
 # Map user choice to file extensions
 file_type_map = {
@@ -88,7 +103,8 @@ else:
 # Ensure all files in the directory match the selected file type
 for f in os.listdir(directory):
     if not f.endswith(file_extension):
-        print(f"Non-{file_extension} file found: {f}, exiting program. Please ensure all files in the directory are {file_extension} files.")
+        print(
+            f"Non-{file_extension} file found: {f}, exiting program. Please ensure all files in the directory are {file_extension} files.")
         exit()
 
 print(f"All files in the directory are {file_extension} files, proceeding to generate sound files.")
