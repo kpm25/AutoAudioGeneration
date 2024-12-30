@@ -19,16 +19,18 @@ cd AutoAudioGeneration
 Run the following command to install the required libraries:
 
 
-```python
+```bash
 pip install -r requirements.txt
 ``` 
 
 3. Run the Script
 Run the following command to generate audio files:
 
-```python
+```bash
 python generate_audio.py
 ```
+
+
    Usage
 The script reads the word/sentence list from the data/words.txt file and generates audio files for each word/sentence in the list. The audio files are saved in the audio directory.  
 License
