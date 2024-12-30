@@ -3,6 +3,7 @@ sounds/
 generated_images/
 .venv/
 .idea/
+.audio/
 
 # dont include backupo backup_requirements.txt
 backup_requirements.txt
