@@ -4,6 +4,12 @@ generated_images/
 .venv/
 .idea/
 
+# dont include backupo backup_requirements.txt
+backup_requirements.txt
+
+#dont include git_commit.py
+git_commit.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
