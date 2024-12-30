@@ -2,6 +2,7 @@
 
 ## Overview
 This project contains scripts that can automatically generate audio files in MP3 format for word/sentence lists.
+It will generate audio files for each word/sentence in the list and save them in the audio directory.
 
 ## Prerequisites
 - Ensure Python is installed on your system. You can download it from [python.org](https://www.python.org/downloads/).
