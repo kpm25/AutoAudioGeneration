@@ -62,136 +62,169 @@ def merge_sounds(directory, output_file, pause_duration=PAUSE_DURATION_MS):
     print(f"Merged file saved as: {output_file}")
 
 
-# Prompt user to enter the directory path
-directory = input("Enter the directory path containing image files: ").strip()
+try:
+    # Prompt user to enter the directory path
+    directory = input("Enter the directory path containing image files: ").strip()
 
-# Validate the directory
-if not os.path.exists(directory):
-    print(f"Directory does not exist: {directory}")
-    exit()
-else:
-    print(f"Directory exists: {directory}")
-
-
-# Function to display file type menu and get user input
-def select_file_type():
-    print("Select the file type to process:")
-    print("1. PNG files (.png)")
-    print("2. JPG files (.jpg)")
-    print("3. GIF files (.gif)")
-    choice = input("Enter your choice (1/2/3): ").strip()
-    return choice
+    # Validate the directory
+    if not os.path.exists(directory):
+        print(f"Directory does not exist: {directory}")
+        exit()
+    else:
+        print(f"Directory exists: {directory}")
 
 
-# Map user choice to file extensions
-file_type_map = {
-    '1': '.png',
-    '2': '.jpg',
-    '3': '.gif'
-}
+    # Function to display file type menu and get user input
+    def select_file_type():
+        print("Select the file type to process:")
+        print("1. PNG files (.png)")
+        print("2. JPG files (.jpg)")
+        print("3. GIF files (.gif)")
+        choice = input("Enter your choice (1/2/3): ").strip()
+        return choice
 
-# Display file type menu and get user choice
-file_type_choice = select_file_type()
 
-# Validate choice and get corresponding file extension
-if file_type_choice in file_type_map:
-    file_extension = file_type_map[file_type_choice]
-else:
-    print("Invalid choice, exiting program.")
-    exit()
+    # Map user choice to file extensions
+    file_type_map = {
+        '1': '.png',
+        '2': '.jpg',
+        '3': '.gif'
+    }
 
-# Ensure all files in the directory match the selected file type
-for f in os.listdir(directory):
-    if not f.endswith(file_extension):
-        print(
-            f"Non-{file_extension} file found: {f}, exiting program. Please ensure all files in the directory are {file_extension} files.")
+    # Display file type menu and get user choice
+    file_type_choice = select_file_type()
+
+    # Validate choice and get corresponding file extension
+    if file_type_choice in file_type_map:
+        file_extension = file_type_map[file_type_choice]
+    else:
+        print("Invalid choice, exiting program.")
         exit()
 
-print(f"All files in the directory are {file_extension} files, proceeding to generate sound files.")
+    # Ensure all files in the directory match the selected file type
+    for f in os.listdir(directory):
+        if not f.endswith(file_extension):
+            print(
+                f"Non-{file_extension} file found: {f}, exiting program. Please ensure all files in the directory are {file_extension} files.")
+            exit()
 
-# List of words (filenames without extensions)
-words = [os.path.splitext(f)[0] for f in os.listdir(directory) if f.endswith(file_extension)]
+    print(f"All files in the directory are {file_extension} files, proceeding to generate sound files.")
 
-# Display menu and get user choice
-choice = display_menu()
+    # List of words (filenames without extensions)
+    words = [os.path.splitext(f)[0] for f in os.listdir(directory) if f.endswith(file_extension)]
 
-# Set prefix and use_prefix based on user choice
-if choice == '1':
-    prefix = "sound"
-    use_prefix = True
-    use_underscore = False
-elif choice == '2':
-    use_prefix = False
-    use_underscore = False
-elif choice == '3':
-    prefix = input("Enter the new prefix: ").strip()
-    use_prefix = True
-    use_underscore = False
-elif choice == '4':
-    use_prefix = False
-    use_underscore = True
-elif choice == '5':
-    # Merge all sound files into one
-    sounds_directory = "sounds"
-    merged_sounds_directory = "MergedSounds"
-    os.makedirs(sounds_directory, exist_ok=True)
-    os.makedirs(merged_sounds_directory, exist_ok=True)
-    folder_name = os.path.basename(os.path.normpath(directory))
-    print("Select an option for the merged file name:")
-    print("1. Use default folder name")
-    print("2. Enter a custom name")
-    name_choice = input("Enter your choice (1/2): ").strip()
-    if name_choice == '1':
-        custom_name = folder_name
-    elif name_choice == '2':
-        custom_name = input("Enter the custom name: ").strip()
-    else:
-        print("Invalid choice, using default folder name.")
-        custom_name = folder_name
-    output_file = os.path.join(merged_sounds_directory, f"{custom_name}.mp3")
-    merge_sounds(sounds_directory, output_file)
-    exit()
-else:
-    print("Invalid choice, exiting program.")
-    exit()
+    # Display menu and get user choice
+    choice = display_menu()
 
-# Directory to save files
-sounds_directory = "sounds"
-os.makedirs(sounds_directory, exist_ok=True)
-
-# Warning and user confirmation
-print(f"Warning: This will clear all files in the '{sounds_directory}' directory.")
-confirmation = input("Do you want to continue? (yes/no): ").strip().lower()
-
-if confirmation == 'yes':
-    # Clean the sounds directory
-    clean_sounds_directory(sounds_directory)
-    print(f"Cleared the '{sounds_directory}' directory.")
-else:
-    print("Exiting program, as operation cancelled.")
-    exit()
-
-# Display accent menu and get user choice
-accent_choice = select_accent()
-
-# Validate choice and get corresponding tld
-if accent_choice in accent_map:
-    tld = accent_map[accent_choice]
-else:
-    print("Invalid choice, using default accent (British English).")
-    tld = 'co.uk'
-
-# Generate new sound files
-for i, word in enumerate(words, 1):
-    try:
-        tts = gTTS(text=word, lang='en', tld=tld)
-        if use_prefix:
-            filename = f"{sounds_directory}/{prefix}{i}.mp3"
-        elif use_underscore:
-            filename = f"{sounds_directory}/{word.replace(' ', '_')}.mp3"
+    # Set prefix and use_prefix based on user choice
+    if choice == '1':
+        prefix = "sound"
+        use_prefix = True
+        use_underscore = False
+    elif choice == '2':
+        use_prefix = False
+        use_underscore = False
+    elif choice == '3':
+        prefix = input("Enter the new prefix: ").strip()
+        use_prefix = True
+        use_underscore = False
+    elif choice == '4':
+        use_prefix = False
+        use_underscore = True
+    elif choice == '5':
+        # Merge all sound files into one
+        sounds_directory = "sounds"
+        merged_sounds_directory = "MergedSounds"
+        os.makedirs(sounds_directory, exist_ok=True)
+        os.makedirs(merged_sounds_directory, exist_ok=True)
+        # os.path.basename(os.path.normpath(directory)) returns the name of the last directory in the path
+        folder_name = os.path.basename(os.path.normpath(directory))
+        print("Select an option for the merged file name:")
+        print("1. Use default folder name")
+        print("2. Enter a custom name")
+        name_choice = input("Enter your choice (1/2): ").strip()
+        if name_choice == '1':
+            custom_name = folder_name
+        elif name_choice == '2':
+            custom_name = input("Enter the custom name: ").strip()
         else:
-            filename = f"{sounds_directory}/{word}.mp3"
-        tts.save(filename)
-        print(f"Generated: {filename}")
-    except gTTSError as e:
-        print(f"Failed to generate audio for '{word}': {e}")
+            print("Invalid choice, using default folder name.")
+            custom_name = folder_name
+
+        # include option 1 or 2 to enter custom pause duration in milliseconds
+        print("Select an option for the pause duration:")
+        print("1. Use default pause duration of 1 second")
+        print("2. Enter a custom pause duration")
+        pause_duration_choice = input("Enter your choice (1/2): ").strip()
+        if pause_duration_choice == '1':
+            print("Using default pause duration of 1 second.")
+            pause_duration = PAUSE_DURATION_MS
+        elif pause_duration_choice == '2':
+            pause_duration = input("Enter the custom pause duration in milliseconds: ").strip()
+            # Validate the pause duration is an integer and not negative or greater than 10000 (10 seconds)
+            try:
+                pause_duration = int(pause_duration)
+                if pause_duration < 0:
+                    print("Pause duration cannot be negative, using default pause duration.")
+                    pause_duration = PAUSE_DURATION_MS
+                elif pause_duration > 10000:
+                    print("Pause duration cannot be greater than 10 seconds, using default pause duration.")
+                    pause_duration = PAUSE_DURATION_MS
+            except ValueError:
+                print("Invalid pause duration, using default pause duration.")
+                pause_duration = PAUSE_DURATION_MS
+        else:
+            print("Invalid choice, using default pause duration.")
+            pause_duration = PAUSE_DURATION_MS
+
+        output_file = os.path.join(merged_sounds_directory, f"{custom_name}.mp3")
+        merge_sounds(sounds_directory, output_file, pause_duration)
+        exit()
+    else:
+        print("Invalid choice, exiting program.")
+        exit()
+
+    # Directory to save files
+    sounds_directory = "sounds"
+    os.makedirs(sounds_directory, exist_ok=True)
+
+    # Warning and user confirmation
+    print(f"Warning: This will clear all files in the '{sounds_directory}' directory.")
+    confirmation = input("Do you want to continue? (yes/no): ").strip().lower()
+
+    if confirmation == 'yes':
+        # Clean the sounds directory
+        clean_sounds_directory(sounds_directory)
+        print(f"Cleared the '{sounds_directory}' directory.")
+    else:
+        print("Exiting program, as operation cancelled.")
+        exit()
+
+    # Display accent menu and get user choice
+    accent_choice = select_accent()
+
+    # Validate choice and get corresponding tld
+    if accent_choice in accent_map:
+        tld = accent_map[accent_choice]
+    else:
+        print("Invalid choice, using default accent (British English).")
+        tld = 'co.uk'
+
+    # Generate new sound files
+    for i, word in enumerate(words, 1):
+        try:
+            tts = gTTS(text=word, lang='en', tld=tld)
+            if use_prefix:
+                filename = f"{sounds_directory}/{prefix}{i}.mp3"
+            elif use_underscore:
+                filename = f"{sounds_directory}/{word.replace(' ', '_')}.mp3"
+            else:
+                filename = f"{sounds_directory}/{word}.mp3"
+            tts.save(filename)
+            print(f"Generated: {filename}")
+        except gTTSError as e:
+            print(f"Failed to generate audio for '{word}': {e}")
+
+except KeyboardInterrupt:
+    print("\nProgram interrupted by user. Exiting gracefully.")
+    exit()
